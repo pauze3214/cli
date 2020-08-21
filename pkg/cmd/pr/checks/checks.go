@@ -1,4 +1,4 @@
-package main
+package checks
 
 import (
 	"net/http"
@@ -38,7 +38,6 @@ func NewCmdChecks(f *cmdutil.Factory, runF func(*ChecksOptions) error) *cobra.Co
 		RunE: func(cmd *cobra.Command, args []string) error {
 			// support `-R, --repo` override
 			opts.BaseRepo = f.BaseRepo
-			opts.HasRepoOverride = cmd.Flags().Changed("repo")
 
 			if runF != nil {
 				return runF(opts)
@@ -52,6 +51,11 @@ func NewCmdChecks(f *cmdutil.Factory, runF func(*ChecksOptions) error) *cobra.Co
 }
 
 func checksRun(opts *ChecksOptions) error {
+	repo, err := opts.BaseRepo()
+	if err != nil {
+		return err
+	}
+
 	httpClient, err := opts.HttpClient()
 	if err != nil {
 		return err
@@ -63,7 +67,7 @@ func checksRun(opts *ChecksOptions) error {
 		return err
 	}
 
-	// TODO get boiler plate finished, produce current or provided PR
+	_, err = checkRuns(apiClient, repo, pr)
 
 	// TODO checks query
 
