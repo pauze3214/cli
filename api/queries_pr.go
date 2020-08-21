@@ -481,30 +481,6 @@ func PullRequestByNumber(client *Client, repo ghrepo.Interface, number int) (*Pu
 				milestone{
 					title
 				}
-				commits(last: 1) {
-					edges {
-						node {
-							commit {
-								checkSuites(first:100) {
-									edges {
-										node {
-											checkRuns(first:100) {
-												edges {
-													node {
-														title
-														status
-														conclusion
-														detailsUrl
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
 			}
 		}
 	}`
