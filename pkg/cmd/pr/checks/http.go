@@ -26,7 +26,7 @@ func checkRuns(client *api.Client, repo ghrepo.Interface, pr *api.PullRequest) (
 
 	type response struct {
 		Repository struct {
-			PullRequests struct {
+			PullRequest struct {
 				Commits struct {
 					Nodes []struct {
 						Commit struct {
@@ -52,8 +52,8 @@ func checkRuns(client *api.Client, repo ghrepo.Interface, pr *api.PullRequest) (
 
 	query := `
 	query PullRequestChecks($owner: String!, $repo: String!, $pr_number: Int!) {
-		repository(owner: $owner, name $repo) {
-			pullRequests(number: $pr_number) {
+		repository(owner: $owner, name: $repo) {
+			pullRequest(number: $pr_number) {
 				commits(last: 1) {
 				  nodes {
 				  	commit {
@@ -86,6 +86,7 @@ func checkRuns(client *api.Client, repo ghrepo.Interface, pr *api.PullRequest) (
 	var resp response
 	err := client.GraphQL(repo.RepoHost(), query, variables, &resp)
 	fmt.Printf("DEBUG %#v\n", resp)
+	fmt.Printf("DEBUG %#v\n", err)
 	if err != nil {
 		return list, err
 	}
