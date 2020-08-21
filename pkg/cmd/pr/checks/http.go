@@ -85,10 +85,16 @@ func checkRuns(client *api.Client, repo ghrepo.Interface, pr *api.PullRequest) (
 
 	var resp response
 	err := client.GraphQL(repo.RepoHost(), query, variables, &resp)
-	fmt.Printf("DEBUG %#v\n", resp)
-	fmt.Printf("DEBUG %#v\n", err)
 	if err != nil {
 		return list, err
+	}
+
+	suites := resp.Repository.PullRequest.Commits.Nodes[0].Commit.CheckSuites.Nodes
+
+	for _, suite := range suites {
+		for _, runNode := range suite.CheckRuns.Nodes {
+			fmt.Printf("DEBUG %#v\n", runNode)
+		}
 	}
 
 	return list, nil
