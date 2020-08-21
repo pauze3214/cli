@@ -68,6 +68,9 @@ func checksRun(opts *ChecksOptions) error {
 	}
 
 	_, err = checkRuns(apiClient, repo, pr)
+	if err != nil {
+		return err
+	}
 
 	// TODO checks query
 
